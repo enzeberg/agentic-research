@@ -8,10 +8,15 @@ The Agentic Research System is a multi-agent platform designed to conduct deep r
 
 ### 1. Multi-Agent System
 
-#### Orchestrator (via LangGraph)
-- Coordinates all agents through a state machine
-- Manages workflow transitions
-- Handles error recovery
+#### Orchestrator (ResearchWorkflow)
+- **Implementation**: `src/workflows/research_flow.py`
+- **Technology**: LangGraph StateGraph
+- **Responsibilities**:
+  - Coordinates all agents through a state machine
+  - Manages workflow transitions between nodes
+  - Handles error recovery and iteration control
+  - Determines conditional routing (continue research, move to RAG, or generate report)
+- **Note**: The orchestrator is not a separate agent file but a workflow class that uses LangGraph to coordinate specialized agents
 
 #### Planning Agent
 - Analyzes user queries
@@ -214,8 +219,10 @@ Final Report
 ### Adding New Agents
 1. Create agent class in `src/agents/`
 2. Implement required methods
-3. Add to workflow in `src/workflows/research_flow.py`
-4. Update state if needed
+3. Initialize agent in `ResearchWorkflow.__init__()` in `src/workflows/research_flow.py`
+4. Add corresponding node method (e.g., `_new_agent_node()`)
+5. Update workflow graph in `_build_graph()` to include the new node
+6. Update state definition in `src/workflows/states.py` if needed
 
 ### Adding New Tools
 1. Create tool class in `src/tools/`
