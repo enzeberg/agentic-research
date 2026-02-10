@@ -124,19 +124,18 @@ result = await system.research("Your research query")
 agentic-research/
 ├── src/
 │   ├── agents/              # Agent implementations
-│   │   ├── orchestrator.py  # Main orchestrator agent
 │   │   ├── planning.py      # Planning agent
 │   │   ├── task_manager.py  # Task management agent
 │   │   ├── research.py      # Research agent
 │   │   ├── rag.py           # RAG agent
-│   │   ├── memory.py        # Memory manager
 │   │   └── report.py        # Report generator
 │   ├── workflows/           # LangGraph workflows
-│   │   ├── research_flow.py # Main research workflow
+│   │   ├── research_flow.py # Main research workflow (orchestrator)
 │   │   └── states.py        # Workflow state definitions
 │   ├── memory/              # Memory system
 │   │   ├── working.py       # Working memory
-│   │   └── short_term.py    # Short-term memory
+│   │   ├── short_term.py    # Short-term memory
+│   │   └── manager.py       # Memory manager
 │   ├── rag/                 # RAG module
 │   │   ├── vectorstore.py   # Chroma integration
 │   │   ├── retriever.py     # Document retrieval
@@ -146,9 +145,7 @@ agentic-research/
 │   │   ├── content_fetch.py # Web content fetching
 │   │   └── document.py      # Document processing
 │   ├── llm/                 # LLM management
-│   │   ├── router.py        # Model router
-│   │   ├── openai.py        # OpenAI integration
-│   │   └── anthropic.py     # Anthropic integration
+│   │   └── router.py        # Model router (OpenAI & Anthropic)
 │   ├── config.py            # Configuration management
 │   ├── main.py              # Main system entry
 │   └── cli.py               # Command line interface
