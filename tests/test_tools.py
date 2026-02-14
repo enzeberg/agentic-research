@@ -1,32 +1,21 @@
 """Tests for tool implementations."""
 
-import pytest
-from src.tools import DocumentProcessor
+from src.tools.web_search import web_search, get_search_urls
+from src.tools.content_fetch import fetch_webpage
 
 
-def test_document_processor():
-    """Test document processing."""
-    processor = DocumentProcessor(chunk_size=100, chunk_overlap=20)
-    
-    # Test text splitting
-    text = "This is a test. " * 50  # Create long text
-    chunks = processor.split_text(text)
-    
-    assert len(chunks) > 1
-    assert all(len(chunk) <= 120 for chunk in chunks)  # Allow some overflow
-    
-    # Test document processing
-    docs = processor.process_document(text, metadata={"source": "test"})
-    
-    assert len(docs) > 0
-    assert all("content" in doc for doc in docs)
-    assert all("metadata" in doc for doc in docs)
-    assert all(doc["metadata"]["source"] == "test" for doc in docs)
-    
-    # Test key points extraction
-    key_points = processor.extract_key_points(text, max_points=3)
-    assert len(key_points) <= 3
-    
-    # Test summarization
-    summary = processor.summarize_content(text, max_length=50)
-    assert len(summary) <= 55  # Allow for ellipsis
+def test_web_search_tool_exists():
+    """Test that web_search tool is properly defined."""
+    assert web_search.name == "web_search"
+    assert "search" in web_search.description.lower()
+
+
+def test_get_search_urls_tool_exists():
+    """Test that get_search_urls tool is properly defined."""
+    assert get_search_urls.name == "get_search_urls"
+
+
+def test_fetch_webpage_tool_exists():
+    """Test that fetch_webpage tool is properly defined."""
+    assert fetch_webpage.name == "fetch_webpage"
+    assert "url" in fetch_webpage.description.lower()

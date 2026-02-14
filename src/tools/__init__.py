@@ -1,7 +1,10 @@
-"""Tool implementations for research agents."""
+"""Research tools for the agent."""
 
-from src.tools.web_search import TavilySearchTool
-from src.tools.content_fetch import ContentFetchTool
-from src.tools.document import DocumentProcessor
+from src.tools.web_search import web_search, get_search_urls
+from src.tools.content_fetch import fetch_webpage
 
-__all__ = ["TavilySearchTool", "ContentFetchTool", "DocumentProcessor"]
+__all__ = [
+    "web_search",
+    "get_search_urls",
+    "fetch_webpage",
+]

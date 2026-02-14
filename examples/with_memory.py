@@ -1,39 +1,38 @@
-"""Example demonstrating memory system."""
+"""Demonstrate the memory system across multiple related queries."""
 
 import asyncio
 from src.main import AgenticResearchSystem
 
 
 async def main():
-    """Demonstrate memory system with multiple queries."""
     system = AgenticResearchSystem()
-    
+
     # First query
-    query1 = "What is machine learning?"
-    print(f"Query 1: {query1}\n")
-    result1 = await system.research(query1)
-    print(f"Report length: {len(result1.get('report', ''))} characters\n")
-    
-    # Second related query (should benefit from memory)
-    query2 = "What are the main types of machine learning algorithms?"
-    print(f"Query 2: {query2}\n")
-    result2 = await system.research(query2)
-    print(f"Report length: {len(result2.get('report', ''))} characters\n")
-    
-    # Check memory
-    print("="*80)
+    print("Query 1: What is machine learning?\n")
+    result1 = await system.research("What is machine learning?")
+    print(f"Report 1: {len(result1.get('report', ''))} chars\n")
+
+    # Second related query — benefits from memory context
+    print("Query 2: What are the main types of ML algorithms?\n")
+    result2 = await system.research(
+        "What are the main types of machine learning algorithms?"
+    )
+    print(f"Report 2: {len(result2.get('report', ''))} chars\n")
+
+    # Show memory state
+    print("=" * 60)
     print("MEMORY SUMMARY")
-    print("="*80)
-    memory_summary = system.get_memory_summary()
-    print(f"Short-term memory sessions: {len(memory_summary.get('short_term_memory', []))}")
-    
-    # Find similar research
-    print("\n" + "="*80)
-    print("SIMILAR PAST RESEARCH")
-    print("="*80)
-    similar = system.find_similar_research("machine learning basics")
-    for i, session in enumerate(similar, 1):
-        print(f"{i}. {session['query']}")
+    print("=" * 60)
+    summary = system.get_memory_summary()
+    sessions = summary.get("short_term_memory", [])
+    print(f"Sessions in memory: {len(sessions)}")
+    for i, s in enumerate(sessions, 1):
+        print(f"  {i}. {s['query']}")
+
+    # Find similar past research
+    print("\nSimilar to 'machine learning basics':")
+    for s in system.find_similar_research("machine learning basics"):
+        print(f"  - {s['query']}")
 
 
 if __name__ == "__main__":

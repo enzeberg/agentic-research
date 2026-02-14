@@ -1,36 +1,28 @@
-"""Example comparing results from different LLM providers."""
+"""Compare research results from different LLM providers."""
 
 import asyncio
 from src.main import AgenticResearchSystem
+from src.config import ResearchConfig
 
 
 async def main():
-    """Compare research results from OpenAI and Anthropic."""
     query = "What are the key differences between transformer and RNN architectures?"
-    
-    print(f"Researching: {query}\n")
-    
-    # Research with OpenAI
-    print("="*80)
-    print("USING OPENAI (GPT-4)")
-    print("="*80)
-    
-    system_openai = AgenticResearchSystem()
-    result_openai = await system_openai.research(query, llm_provider="openai")
-    
-    if result_openai.get("report"):
-        print(result_openai["report"][:500] + "...\n")
-    
-    # Research with Anthropic
-    print("="*80)
-    print("USING ANTHROPIC (CLAUDE)")
-    print("="*80)
-    
-    system_anthropic = AgenticResearchSystem()
-    result_anthropic = await system_anthropic.research(query, llm_provider="anthropic")
-    
-    if result_anthropic.get("report"):
-        print(result_anthropic["report"][:500] + "...")
+    print(f"Query: {query}\n")
+
+    for provider in ["openai", "anthropic"]:
+        print("=" * 80)
+        print(f"PROVIDER: {provider.upper()}")
+        print("=" * 80)
+
+        config = ResearchConfig(llm_provider=provider)
+        system = AgenticResearchSystem(config=config)
+        result = await system.research(query)
+
+        if result.get("report"):
+            # Print first 500 chars as preview
+            print(result["report"][:500] + "...\n")
+        else:
+            print(f"Error: {result.get('error')}\n")
 
 
 if __name__ == "__main__":

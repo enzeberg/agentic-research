@@ -135,7 +135,7 @@ uv run pytest --cov=src
 ## Adding New Features
 
 ### New Agent
-1. Create agent file in `src/agents/`
+1. Create agent file in `src/core/`
 2. Implement agent class with required methods
 3. Add tests in `tests/`
 4. Update workflow if needed

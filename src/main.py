@@ -7,7 +7,6 @@ from src.config import ResearchConfig, settings
 from src.workflows import ResearchWorkflow
 from src.memory import MemoryManager
 
-
 # Configure logging
 logging.basicConfig(
     level=getattr(logging, settings.log_level),
@@ -17,69 +16,61 @@ logger = logging.getLogger(__name__)
 
 
 class AgenticResearchSystem:
-    """Main system orchestrating the research process."""
+    """Main system that orchestrates deep research.
 
-    def __init__(
-        self,
-        config: ResearchConfig | None = None,
-    ):
-        """Initialize the research system.
-        
-        Args:
-            config: Research configuration (uses defaults if None)
-        """
+    Architecture:
+        - Planner (LLM chain): creates a structured research plan.
+        - Research Agent (ReAct agent): autonomously searches the web and
+          gathers information using tools.
+        - Report Generator (LLM chain): synthesizes findings into a report.
+    """
+
+    def __init__(self, config: ResearchConfig | None = None):
         self.config = config or ResearchConfig(
             llm_provider=settings.default_llm_provider,
-            max_iterations=settings.max_research_iterations,
         )
-        
-        # Initialize memory manager
         self.memory_manager = MemoryManager()
-        
-        logger.info(f"Initialized Agentic Research System with {self.config.llm_provider} provider")
+
+        logger.info(
+            "Initialized research system (provider=%s)",
+            self.config.llm_provider,
+        )
 
     async def research(
         self,
         query: str,
         llm_provider: str | None = None,
     ) -> dict[str, Any]:
-        """Execute research for a query.
-        
+        """Execute deep research for a query.
+
         Args:
-            query: Research query
-            llm_provider: Override default LLM provider
-            
+            query: The research question.
+            llm_provider: Override default LLM provider for this session.
+
         Returns:
-            Research results including report
+            Dict with keys: query, plan, findings, report, error, completed.
         """
-        logger.info(f"Starting research for query: {query}")
-        
-        # Update config if provider specified
+        logger.info("Starting research: %s", query)
+
         if llm_provider:
             self.config.llm_provider = llm_provider
-        
-        # Create workflow
+
         workflow = ResearchWorkflow(
             config=self.config,
             memory_manager=self.memory_manager,
         )
-        
-        # Run workflow
+
         result = await workflow.run(query)
-        
+
         if result.get("error"):
-            logger.error(f"Research failed: {result['error']}")
+            logger.error("Research failed: %s", result["error"])
         else:
             logger.info("Research completed successfully")
-        
+
         return result
 
     def get_memory_summary(self) -> dict[str, Any]:
-        """Get summary of memory state.
-        
-        Returns:
-            Memory summary
-        """
+        """Get a summary of the memory state."""
         return self.memory_manager.get_context()
 
     def clear_memory(self) -> None:
@@ -92,34 +83,22 @@ class AgenticResearchSystem:
         query: str,
         top_k: int = 3,
     ) -> list[dict[str, Any]]:
-        """Find similar past research.
-        
-        Args:
-            query: Query to match
-            top_k: Number of results
-            
-        Returns:
-            List of similar research sessions
-        """
+        """Find similar past research sessions."""
         return self.memory_manager.find_relevant_history(query, top_k)
 
 
 async def main() -> None:
-    """Example usage of the system."""
-    # Initialize system
+    """Example usage."""
     system = AgenticResearchSystem()
-    
-    # Run research
+
     result = await system.research(
         query="What are the latest developments in quantum computing?",
-        llm_provider="openai",
     )
-    
-    # Print report
+
     if result.get("report"):
-        print("\n" + "="*80)
+        print("\n" + "=" * 80)
         print("RESEARCH REPORT")
-        print("="*80 + "\n")
+        print("=" * 80 + "\n")
         print(result["report"])
     else:
         print(f"Research failed: {result.get('error')}")

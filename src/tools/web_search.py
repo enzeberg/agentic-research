@@ -1,94 +1,85 @@
 """Web search tool using Tavily API."""
 
 from typing import Any
+
+from langchain_core.tools import tool
 from tavily import TavilyClient
 
 from src.config import settings
 
 
-class TavilySearchTool:
-    """Web search tool powered by Tavily API."""
+def _get_tavily_client() -> TavilyClient:
+    """Get Tavily client instance."""
+    if not settings.tavily_api_key:
+        raise ValueError("Tavily API key not configured")
+    return TavilyClient(api_key=settings.tavily_api_key)
 
-    def __init__(self, api_key: str | None = None):
-        """Initialize Tavily search tool.
-        
-        Args:
-            api_key: Tavily API key (uses config default if None)
-        """
-        self.api_key = api_key or settings.tavily_api_key
-        if not self.api_key:
-            raise ValueError("Tavily API key not configured")
-        self.client = TavilyClient(api_key=self.api_key)
 
-    def search(
-        self,
-        query: str,
-        max_results: int = 5,
-        search_depth: str = "advanced",
-        include_domains: list[str] | None = None,
-        exclude_domains: list[str] | None = None,
-    ) -> dict[str, Any]:
-        """Perform web search.
-        
-        Args:
-            query: Search query
-            max_results: Maximum number of results to return
-            search_depth: Search depth ('basic' or 'advanced')
-            include_domains: List of domains to include
-            exclude_domains: List of domains to exclude
-            
-        Returns:
-            Search results with URLs, titles, and content
-        """
-        try:
-            response = self.client.search(
-                query=query,
-                max_results=max_results,
-                search_depth=search_depth,
-                include_domains=include_domains,
-                exclude_domains=exclude_domains,
-            )
-            return {
-                "query": query,
-                "results": response.get("results", []),
-                "answer": response.get("answer", ""),
-                "images": response.get("images", []),
-            }
-        except Exception as e:
-            return {
-                "query": query,
-                "results": [],
-                "error": str(e),
-            }
+@tool
+def web_search(query: str, max_results: int = 5) -> str:
+    """Search the web for information on a topic.
 
-    def get_search_context(
-        self,
-        query: str,
-        max_results: int = 5,
-    ) -> str:
-        """Get search context as formatted string.
-        
-        Args:
-            query: Search query
-            max_results: Maximum number of results
-            
-        Returns:
-            Formatted search context
-        """
-        results = self.search(query, max_results=max_results)
-        
-        if "error" in results:
-            return f"Search error: {results['error']}"
+    Use this tool to find up-to-date information, facts, news, and research
+    on any topic. Returns titles, URLs, and content snippets from web pages.
 
-        context_parts = [f"Search Query: {query}\n"]
-        
-        if results.get("answer"):
-            context_parts.append(f"Quick Answer: {results['answer']}\n")
+    Args:
+        query: The search query to look up.
+        max_results: Maximum number of results to return (default 5).
+    """
+    client = _get_tavily_client()
 
-        context_parts.append("Search Results:")
-        for i, result in enumerate(results.get("results", []), 1):
-            context_parts.append(f"\n{i}. {result.get('title', 'No title')}")
-            context_parts.append(f"   URL: {result.get('url', 'No URL')}")
-            context_parts.append(f"   Content: {result.get('content', 'No content')[:300]}...")
+    try:
+        response = client.search(
+            query=query,
+            max_results=max_results,
+            search_depth="advanced",
+        )
+    except Exception as e:
+        return f"Search error: {e}"
 
-        return "\n".join(context_parts)
+    results = response.get("results", [])
+    if not results:
+        return "No results found."
+
+    parts = []
+    if response.get("answer"):
+        parts.append(f"Quick Answer: {response['answer']}\n")
+
+    for i, result in enumerate(results, 1):
+        title = result.get("title", "No title")
+        url = result.get("url", "")
+        content = result.get("content", "")[:400]
+        parts.append(f"{i}. {title}\n   URL: {url}\n   {content}\n")
+
+    return "\n".join(parts)
+
+
+@tool
+def get_search_urls(query: str, max_results: int = 5) -> str:
+    """Search the web and return just the URLs for deeper content fetching.
+
+    Use this when you want to find relevant pages to fetch full content from.
+
+    Args:
+        query: The search query to look up.
+        max_results: Maximum number of URLs to return.
+    """
+    client = _get_tavily_client()
+
+    try:
+        response = client.search(
+            query=query,
+            max_results=max_results,
+            search_depth="basic",
+        )
+    except Exception as e:
+        return f"Search error: {e}"
+
+    results = response.get("results", [])
+    if not results:
+        return "No results found."
+
+    lines = []
+    for r in results:
+        lines.append(f"- {r.get('title', 'No title')}: {r.get('url', '')}")
+    return "\n".join(lines)

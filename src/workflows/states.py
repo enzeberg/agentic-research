@@ -1,35 +1,24 @@
-"""State definitions for LangGraph workflows."""
+"""State definitions for the research workflow."""
 
-from typing import TypedDict, Annotated, Any
-from operator import add
+from typing import Any, TypedDict
 
 
 class ResearchState(TypedDict):
-    """State for the research workflow."""
-    
+    """State flowing through the research workflow."""
+
     # Input
     query: str
-    llm_provider: str
-    
-    # Planning
+
+    # Plan step output
     plan: dict[str, Any]
-    tasks: Annotated[list[dict[str, Any]], add]
-    
-    # Research
-    search_results: Annotated[list[dict[str, Any]], add]
-    documents: Annotated[list[dict[str, Any]], add]
-    
-    # RAG
-    rag_context: str
-    
-    # Memory
-    memory_context: dict[str, Any]
-    
-    # Output
+    memory_context: str
+
+    # Research step output
+    findings: str
+
+    # Report step output
     report: str
-    
+
     # Control
-    iteration: int
-    max_iterations: int
     completed: bool
     error: str | None
