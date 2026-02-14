@@ -1,4 +1,4 @@
-"""Main entry point for the Agentic Research System."""
+"""Main entry point for the Deep Research system."""
 
 from typing import Any
 import logging
@@ -15,7 +15,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-class AgenticResearchSystem:
+class DeepResearchSystem:
     """Main system that orchestrates deep research.
 
     Architecture:
@@ -89,7 +89,7 @@ class AgenticResearchSystem:
 
 async def main() -> None:
     """Example usage."""
-    system = AgenticResearchSystem()
+    system = DeepResearchSystem()
 
     result = await system.research(
         query="What are the latest developments in quantum computing?",

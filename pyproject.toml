@@ -1,5 +1,5 @@
 [project]
-name = "agentic-research"
+name = "deep-research"
 version = "0.1.0"
 description = "An AI-powered deep research system using LangChain and LangGraph"
 readme = "README.md"

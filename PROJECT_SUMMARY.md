@@ -1,4 +1,4 @@
-# Agentic Research System - Project Summary
+# Deep Research - Project Summary
 
 ## Overview
 
@@ -39,7 +39,7 @@ uv run python -m src.cli "What are the latest developments in AI?"
 ```
 
 ```python
-system = AgenticResearchSystem()
+system = DeepResearchSystem()
 result = await system.research("Your question")
 print(result["report"])
 ```

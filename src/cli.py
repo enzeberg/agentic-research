@@ -1,4 +1,4 @@
-"""Command-line interface for the Agentic Research System."""
+"""Command-line interface for the Deep Research system."""
 
 import asyncio
 import argparse
@@ -8,7 +8,7 @@ from rich.console import Console
 from rich.markdown import Markdown
 from rich.progress import Progress, SpinnerColumn, TextColumn
 
-from src.main import AgenticResearchSystem
+from src.main import DeepResearchSystem
 from src.config import ResearchConfig
 
 console = Console()
@@ -25,7 +25,7 @@ async def run_research(
         verbose=verbose,
     )
 
-    system = AgenticResearchSystem(config=config)
+    system = DeepResearchSystem(config=config)
 
     with Progress(
         SpinnerColumn(),
@@ -60,7 +60,7 @@ async def run_research(
 def main() -> None:
     """Main CLI entry point."""
     parser = argparse.ArgumentParser(
-        description="Agentic Research System - AI-powered deep research assistant",
+        description="Deep Research - AI-powered deep research assistant",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
 
@@ -82,7 +82,7 @@ def main() -> None:
 
     args = parser.parse_args()
 
-    console.print("\n[bold cyan]Agentic Research System[/bold cyan]")
+    console.print("\n[bold cyan]Deep Research[/bold cyan]")
     console.print(f"Provider: {args.provider}")
     console.print(f"Query: {args.query}\n")
 

@@ -1,1 +1,1 @@
-"""Example scripts for Agentic Research System."""
+"""Example scripts for Deep Research."""

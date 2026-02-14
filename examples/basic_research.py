@@ -1,11 +1,11 @@
 """Basic research example — search the web and generate a report."""
 
 import asyncio
-from src.main import AgenticResearchSystem
+from src.main import DeepResearchSystem
 
 
 async def main():
-    system = AgenticResearchSystem()
+    system = DeepResearchSystem()
 
     result = await system.research(
         "What are the latest developments in AI in 2025?"

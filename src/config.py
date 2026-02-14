@@ -1,4 +1,4 @@
-"""Configuration management for the Agentic Research System."""
+"""Configuration management for the Deep Research system."""
 
 from typing import Literal
 

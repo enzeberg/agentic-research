@@ -1,11 +1,11 @@
 """Demonstrate the memory system across multiple related queries."""
 
 import asyncio
-from src.main import AgenticResearchSystem
+from src.main import DeepResearchSystem
 
 
 async def main():
-    system = AgenticResearchSystem()
+    system = DeepResearchSystem()
 
     # First query
     print("Query 1: What is machine learning?\n")

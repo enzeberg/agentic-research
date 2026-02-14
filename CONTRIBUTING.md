@@ -1,4 +1,4 @@
-# Contributing to Agentic Research System
+# Contributing to Deep Research
 
 Thank you for your interest in contributing! This document provides guidelines for contributing to the project.
 
@@ -7,7 +7,7 @@ Thank you for your interest in contributing! This document provides guidelines f
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd agentic-research
+   cd deep-research
    ```
 
 2. **Install uv** (if not already installed)

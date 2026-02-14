@@ -1,4 +1,4 @@
-# Agentic Research System
+# Deep Research
 
 An AI-powered deep research system built with LangChain and LangGraph. It autonomously plans research, searches the web, gathers information, and generates comprehensive reports.
 
@@ -44,7 +44,7 @@ An AI-powered deep research system built with LangChain and LangGraph. It autono
 
 ```bash
 git clone <repository-url>
-cd agentic-research
+cd deep-research
 uv sync
 cp .env.example .env
 # Edit .env with your API keys
@@ -74,10 +74,10 @@ uv run python -m src.cli "Your query" --verbose
 
 ```python
 import asyncio
-from src.main import AgenticResearchSystem
+from src.main import DeepResearchSystem
 
 async def main():
-    system = AgenticResearchSystem()
+    system = DeepResearchSystem()
     result = await system.research("What are the latest developments in AI?")
     print(result["report"])
 
@@ -87,7 +87,7 @@ asyncio.run(main())
 ## Project Structure
 
 ```
-agentic-research/
+deep-research/
 ├── src/
 │   ├── core/                  # Core components
 │   │   ├── planner.py         # Research planner (LLM chain)

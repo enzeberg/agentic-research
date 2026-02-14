@@ -1,1 +1,1 @@
-"""Test suite for Agentic Research System."""
+"""Test suite for Deep Research."""

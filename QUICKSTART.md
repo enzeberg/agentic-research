@@ -16,7 +16,7 @@ Get started in 5 minutes.
 # Windows: powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
 
 git clone <repository-url>
-cd agentic-research
+cd deep-research
 uv sync
 cp .env.example .env
 ```
@@ -48,10 +48,10 @@ Or with Python:
 
 ```python
 import asyncio
-from src.main import AgenticResearchSystem
+from src.main import DeepResearchSystem
 
 async def main():
-    system = AgenticResearchSystem()
+    system = DeepResearchSystem()
     result = await system.research("What are the benefits of renewable energy?")
     print(result["report"])
 
